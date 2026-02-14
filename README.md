@@ -1,1 +1,861 @@
-# love
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Our Valentine Story ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #ffdde1 0%, #ffb6c1 100%);
+            font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 16px;
+            touch-action: manipulation;
+        }
+
+        /* floating hearts container */
+        .hearts-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            bottom: -10%;
+            color: #ff3366;
+            font-size: 2rem;
+            opacity: 0.8;
+            animation: floatUp linear infinite;
+            user-select: none;
+            filter: drop-shadow(0 4px 10px rgba(255, 80, 120, 0.5));
+        }
+
+        .heart.small { font-size: 1.3rem; opacity: 0.6; }
+        .heart.medium { font-size: 2.4rem; opacity: 0.8; }
+        .heart.large { font-size: 3.2rem; opacity: 0.7; }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-110vh) rotate(20deg); opacity: 0; }
+        }
+
+        /* main card */
+        .valentine-card {
+            background: rgba(255, 250, 250, 0.85);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 60px;
+            padding: 2rem 2rem 2.5rem;
+            box-shadow: 0 30px 60px rgba(219, 39, 119, 0.4), 0 10px 30px rgba(0,0,0,0.2), 0 0 0 5px rgba(255, 220, 240, 0.9);
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+            z-index: 10;
+            position: relative;
+            border: 3px solid white;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 8vw, 3.5rem);
+            font-weight: 800;
+            background: linear-gradient(145deg, #c44569, #b33771, #833471);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            text-shadow: 2px 2px 20px #ffe6f0;
+        }
+
+        /* teddy bear animation container */
+        .teddy-story {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            margin: 20px 0 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 240, 245, 0.3);
+            border-radius: 50px;
+            padding: 10px;
+        }
+
+        .teddy-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            height: 100%;
+            margin: 0 auto;
+        }
+
+        .teddy {
+            position: absolute;
+            font-size: 5.5rem;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 5;
+            text-shadow: 0 0 15px rgba(255,105,180,0.5);
+            animation: idleBounce 2s infinite alternate;
+        }
+
+        @keyframes idleBounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-8px); }
+        }
+
+        .girl-teddy {
+            left: 5%;
+            bottom: 15%;
+            transform-origin: center;
+        }
+
+        .boy-teddy {
+            right: 5%;
+            bottom: 15%;
+            transform-origin: center;
+        }
+
+        /* props */
+        .prop {
+            position: absolute;
+            font-size: 3.2rem;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            filter: drop-shadow(0 5px 15px rgba(255,215,0,0.6));
+            z-index: 20;
+            text-shadow: 0 0 20px gold;
+        }
+
+        .rose {
+            bottom: 30%;
+            left: 20%;
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        .chocolate {
+            bottom: 30%;
+            left: 45%;
+            opacity: 0;
+            transform: scale(0) rotate(0deg);
+            font-size: 3.8rem;
+        }
+
+        /* kiss hearts */
+        .kiss-container {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 100px;
+            pointer-events: none;
+            z-index: 25;
+        }
+
+        .kiss-heart {
+            position: absolute;
+            font-size: 3.5rem;
+            opacity: 0;
+            filter: drop-shadow(0 0 30px hotpink);
+            animation: kissFloat 1.5s infinite;
+            text-shadow: 0 0 20px #ff1493;
+        }
+
+        .heart1 { left: 20%; animation-delay: 0s; }
+        .heart2 { left: 50%; animation-delay: 0.3s; }
+        .heart3 { left: 80%; animation-delay: 0.6s; }
+
+        @keyframes kissFloat {
+            0% { transform: translateY(0) scale(0.8); opacity: 0; }
+            20% { opacity: 1; transform: translateY(-20px) scale(1.2); }
+            80% { opacity: 1; transform: translateY(-60px) scale(1); }
+            100% { transform: translateY(-100px) scale(0.5); opacity: 0; }
+        }
+
+        /* dance animations */
+        .dance-girl {
+            animation: danceGirl 0.5s infinite alternate !important;
+        }
+
+        .dance-boy {
+            animation: danceBoy 0.5s infinite alternate !important;
+        }
+
+        @keyframes danceGirl {
+            0% { transform: translateX(0) translateY(0) rotate(-5deg); }
+            100% { transform: translateX(10px) translateY(-15px) rotate(8deg); }
+        }
+
+        @keyframes danceBoy {
+            0% { transform: translateX(0) translateY(0) rotate(5deg); }
+            100% { transform: translateX(-10px) translateY(-15px) rotate(-8deg); }
+        }
+
+        .spin {
+            animation: spin 0.8s ease-in-out !important;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.3); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        .jump {
+            animation: jump 0.6s ease !important;
+        }
+
+        @keyframes jump {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-40px); }
+        }
+
+        .button-pair {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0 15px;
+            position: relative;
+            min-height: 120px;
+        }
+
+        .btn {
+            border: none;
+            font-size: clamp(2rem, 7vw, 2.8rem);
+            font-weight: bold;
+            padding: 16px 42px;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 1.5px;
+            min-width: 160px;
+            touch-action: manipulation;
+            border: 4px solid white;
+            animation: glowPulse 2.2s infinite ease-in-out;
+            box-shadow: 0 15px 30px rgba(255, 64, 129, 0.5);
+        }
+
+        @keyframes glowPulse {
+            0% { box-shadow: 0 0 15px #ffb6c1, 0 0 30px #ff4d6d, 0 0 45px #ffb3c6; }
+            50% { box-shadow: 0 0 25px #ffb3c6, 0 0 50px #ff4d6d, 0 0 65px #ff8aa1; }
+            100% { box-shadow: 0 0 15px #ffb6c1, 0 0 30px #ff4d6d, 0 0 45px #ffb3c6; }
+        }
+
+        .btn-yes {
+            background: #ff4d6d;
+            color: white;
+            box-shadow: 0 10px 0 #b32e4a, 0 15px 30px #ff8aa1;
+        }
+
+        .btn-yes:active {
+            transform: translateY(6px);
+            box-shadow: 0 4px 0 #b32e4a, 0 20px 30px #ff8aa1;
+        }
+
+        .btn-no {
+            background: #4a3b3b;
+            color: #ffeef4;
+            box-shadow: 0 10px 0 #2a1f1f, 0 15px 30px #a57a7a;
+            position: relative;
+            z-index: 25;
+            transition: left 0.03s ease, top 0.03s ease !important; /* Super fast movement */
+        }
+
+        /* message container */
+        .hidden-message {
+            display: none;
+            margin-top: 2rem;
+            font-size: clamp(2rem, 7vw, 3rem);
+            font-weight: 700;
+            background: rgba(255, 245, 250, 0.95);
+            padding: 1.8rem 1.5rem;
+            border-radius: 70px;
+            color: #c44569;
+            border: 5px solid white;
+            backdrop-filter: blur(6px);
+            line-height: 1.5;
+            box-shadow: 0 20px 40px #ffb6c1;
+            word-break: break-word;
+        }
+
+        .message-line1 {
+            display: inline-block;
+            border-right: 4px solid #ff4d6d;
+            padding-right: 8px;
+            animation: blinkCursor 0.8s step-end infinite;
+        }
+
+        @keyframes blinkCursor {
+            from, to { border-color: transparent; }
+            50% { border-color: #ff4d6d; }
+        }
+
+        .message-line2 {
+            display: block;
+            font-size: clamp(1.8rem, 6vw, 2.4rem);
+            color: #9b2c4d;
+            margin-top: 12px;
+            font-weight: 500;
+        }
+
+        .heart-deco {
+            font-size: 3.5rem;
+            margin-bottom: 5px;
+        }
+
+        /* fireworks canvas */
+        #fireworksCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            display: none;
+        }
+
+        .happy-mode .button-pair {
+            display: none;
+        }
+        .happy-mode .hidden-message {
+            display: block;
+        }
+
+        /* music toggle */
+        .music-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 220, 240, 0.9);
+            border: 3px solid white;
+            border-radius: 50px;
+            padding: 10px 20px;
+            font-size: 1.4rem;
+            backdrop-filter: blur(10px);
+            z-index: 30;
+            cursor: pointer;
+            box-shadow: 0 0 30px #ffa5b9;
+            transition: 0.2s;
+            color: #b13e5c;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .music-toggle:active { transform: scale(0.95); }
+
+        @media (max-width: 600px) {
+            .teddy { font-size: 4.2rem; }
+            .prop { font-size: 2.5rem; }
+            .teddy-story { height: 260px; }
+            .kiss-heart { font-size: 2.5rem; }
+            .btn { padding: 12px 24px; min-width: 130px; font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts-container" id="heartsContainer"></div>
+    <canvas id="fireworksCanvas"></canvas>
+
+    <!-- Music Toggle -->
+    <div class="music-toggle" id="musicToggle">🎵 Love Song ON</div>
+
+    <div class="valentine-card" id="card">
+        <h1>💗 Our Valentine Story 💗</h1>
+        
+        <!-- Teddy Bear Story Animation -->
+        <div class="teddy-story">
+            <div class="teddy-container" id="teddyContainer">
+                <!-- Girl Teddy -->
+                <div class="teddy girl-teddy" id="girlTeddy">🧸💕</div>
+                <!-- Boy Teddy -->
+                <div class="teddy boy-teddy" id="boyTeddy">🧸💙</div>
+                <!-- Props -->
+                <div class="prop rose" id="rose">🌹</div>
+                <div class="prop chocolate" id="chocolate">🍫</div>
+                <!-- Kiss Hearts Container -->
+                <div class="kiss-container" id="kissContainer">
+                    <div class="kiss-heart heart1">💋</div>
+                    <div class="kiss-heart heart2">❤️</div>
+                    <div class="kiss-heart heart3">💖</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-pair" id="buttonPair">
+            <button class="btn btn-yes" id="yesBtn">Yes</button>
+            <button class="btn btn-no" id="noBtn">No</button>
+        </div>
+        
+        <div class="hidden-message" id="happyMessage">
+            <div class="heart-deco">💖✨💖</div>
+            <div id="typingLine1" class="message-line1"></div>
+            <div id="typingLine2" class="message-line2"></div>
+        </div>
+    </div>
+
+    <!-- Music from 2nd code -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
+        Your browser does not support audio.
+    </audio>
+
+    <script>
+        (function() {
+            // floating hearts generator
+            const heartsContainer = document.getElementById('heartsContainer');
+            const TOTAL_HEARTS = 32;
+            const heartSymbols = ['❤️', '🧡', '💛', '💚', '💙', '💜', '🤍', '❤️‍🔥', '💖', '💗', '💘', '💝', '🌸', '🌺', '💞'];
+
+            function randomBetween(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            function createHeart() {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                const sizeRand = Math.random();
+                if (sizeRand < 0.33) heart.classList.add('small');
+                else if (sizeRand < 0.66) heart.classList.add('medium');
+                else heart.classList.add('large');
+
+                heart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+                heart.style.left = randomBetween(5, 95) + '%';
+                heart.style.animationDuration = randomBetween(8, 20) + 's';
+                heart.style.animationDelay = randomBetween(0, 10) + 's';
+                heartsContainer.appendChild(heart);
+
+                heart.addEventListener('animationend', () => {
+                    heart.remove();
+                    createHeart();
+                });
+            }
+            for (let i = 0; i < TOTAL_HEARTS; i++) createHeart();
+
+            // Music
+            const bgMusic = document.getElementById('bgMusic');
+            const musicToggle = document.getElementById('musicToggle');
+            let musicPlaying = false;
+            bgMusic.volume = 0.4;
+
+            function toggleMusic() {
+                if (musicPlaying) {
+                    bgMusic.pause();
+                    musicToggle.innerHTML = '🎵 Love Song OFF';
+                } else {
+                    bgMusic.play().catch(e => console.log('autoplay blocked'));
+                    musicToggle.innerHTML = '🎵 Love Song ON';
+                }
+                musicPlaying = !musicPlaying;
+            }
+            musicToggle.addEventListener('click', toggleMusic);
+
+            function startMusicOnFirstTouch() {
+                if (!musicPlaying) {
+                    bgMusic.play().then(() => {
+                        musicPlaying = true;
+                        musicToggle.innerHTML = '🎵 Love Song ON';
+                    }).catch(() => {});
+                }
+            }
+            document.body.addEventListener('touchstart', startMusicOnFirstTouch, { once: true });
+            document.body.addEventListener('click', startMusicOnFirstTouch, { once: true });
+
+            // --- SUPER FAST RUNAWAY NO BUTTON - IMPOSSIBLE TO CLICK ---
+            const noBtn = document.getElementById('noBtn');
+            const yesBtn = document.getElementById('yesBtn');
+            const body = document.body;
+            const buttonPair = document.getElementById('buttonPair');
+
+            // Make button container relative for absolute positioning
+            buttonPair.style.position = 'relative';
+            
+            // Aggressive movement function - moves instantly on any interaction
+            function superFastMove(e) {
+                // Prevent any default action
+                if (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                
+                // Don't move if already in happy mode
+                if (body.classList.contains('happy-mode')) return;
+                
+                // Make sure button is absolutely positioned
+                noBtn.style.position = 'absolute';
+                noBtn.style.margin = '0';
+                
+                // Get container dimensions
+                const containerRect = buttonPair.getBoundingClientRect();
+                const btnRect = noBtn.getBoundingClientRect();
+                
+                // Calculate max positions
+                const maxLeft = Math.max(0, containerRect.width - btnRect.width);
+                const maxTop = Math.max(0, containerRect.height - btnRect.height);
+                
+                // Generate random position
+                const newLeft = Math.random() * maxLeft;
+                const newTop = Math.random() * maxTop;
+                
+                // Apply new position instantly (0ms transition)
+                noBtn.style.left = newLeft + 'px';
+                noBtn.style.top = newTop + 'px';
+                
+                // Also move on every event to make it impossible to catch
+                return false;
+            }
+
+            // Initial setup - set initial random position
+            noBtn.style.position = 'absolute';
+            setTimeout(() => {
+                if (!body.classList.contains('happy-mode')) {
+                    const containerRect = buttonPair.getBoundingClientRect();
+                    const btnRect = noBtn.getBoundingClientRect();
+                    const maxLeft = Math.max(0, containerRect.width - btnRect.width);
+                    const maxTop = Math.max(0, containerRect.height - btnRect.height);
+                    noBtn.style.left = Math.random() * maxLeft + 'px';
+                    noBtn.style.top = Math.random() * maxTop + 'px';
+                }
+            }, 100);
+
+            // Attach to EVERY possible event for maximum avoidance
+            const events = [
+                'mouseenter', 'mouseover', 'mousemove',  // Desktop
+                'touchstart', 'touchmove', 'touchend',    // Mobile
+                'click', 'mousedown', 'mouseup'           // Click attempts
+            ];
+            
+            events.forEach(eventType => {
+                noBtn.addEventListener(eventType, superFastMove, { passive: false });
+            });
+
+            // Also move when cursor gets near (extra aggressive)
+            document.addEventListener('mousemove', (e) => {
+                if (body.classList.contains('happy-mode')) return;
+                
+                const btnRect = noBtn.getBoundingClientRect();
+                const buffer = 150; // Distance in pixels that triggers movement
+                
+                // Calculate distance from cursor to button
+                const cursorX = e.clientX;
+                const cursorY = e.clientY;
+                const btnCenterX = btnRect.left + btnRect.width/2;
+                const btnCenterY = btnRect.top + btnRect.height/2;
+                
+                const distance = Math.sqrt(
+                    Math.pow(cursorX - btnCenterX, 2) + 
+                    Math.pow(cursorY - btnCenterY, 2)
+                );
+                
+                // If cursor gets too close, move button
+                if (distance < buffer) {
+                    superFastMove(e);
+                }
+            });
+
+            // Prevent any default click on no button
+            noBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                superFastMove(e);
+                return false;
+            });
+
+            // Fireworks
+            const canvas = document.getElementById('fireworksCanvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let animationFrame = null;
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            class HeartParticle {
+                constructor(x, y) {
+                    this.x = x;
+                    this.y = y;
+                    this.vx = (Math.random() - 0.5) * 9;
+                    this.vy = (Math.random() - 0.7) * 9 - 5;
+                    this.size = Math.random() * 24 + 12;
+                    this.life = 1.0;
+                    this.decay = 0.012 + Math.random() * 0.02;
+                    this.symbol = ['❤️', '💖', '💗', '💘', '💝', '🌸', '💕'][Math.floor(Math.random() * 7)];
+                }
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    this.vy += 0.18;
+                    this.life -= this.decay;
+                }
+                draw(ctx) {
+                    ctx.font = `${this.size * this.life}px 'Segoe UI', 'Arial'`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.globalAlpha = this.life;
+                    ctx.fillText(this.symbol, this.x, this.y);
+                }
+            }
+
+            function createHeartFirework() {
+                const rect = yesBtn.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                for (let i = 0; i < 60; i++) {
+                    particles.push(new HeartParticle(centerX, centerY));
+                }
+                canvas.style.display = 'block';
+                if (animationFrame) cancelAnimationFrame(animationFrame);
+                function animate() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    let alive = false;
+                    for (let i = particles.length - 1; i >= 0; i--) {
+                        particles[i].update();
+                        particles[i].draw(ctx);
+                        if (particles[i].life > 0.02) alive = true;
+                        else particles.splice(i, 1);
+                    }
+                    if (alive) animationFrame = requestAnimationFrame(animate);
+                    else {
+                        canvas.style.display = 'none';
+                        particles = [];
+                        animationFrame = null;
+                    }
+                }
+                animate();
+            }
+
+            // Lively teddy bear story animation
+            const rose = document.getElementById('rose');
+            const chocolate = document.getElementById('chocolate');
+            const kissContainer = document.getElementById('kissContainer');
+            const girlTeddy = document.getElementById('girlTeddy');
+            const boyTeddy = document.getElementById('boyTeddy');
+            const kissHearts = document.querySelectorAll('.kiss-heart');
+
+            function resetStory() {
+                // Reset all elements
+                rose.style.opacity = '0';
+                rose.style.transform = 'scale(0)';
+                chocolate.style.opacity = '0';
+                chocolate.style.transform = 'scale(0)';
+                kissHearts.forEach(h => h.style.opacity = '0');
+                
+                girlTeddy.classList.remove('dance-girl', 'spin', 'jump');
+                boyTeddy.classList.remove('dance-boy', 'spin', 'jump');
+                
+                girlTeddy.style.transform = 'translateX(0) translateY(0) rotate(0)';
+                boyTeddy.style.transform = 'translateX(0) translateY(0) rotate(0)';
+                girlTeddy.style.left = '5%';
+                boyTeddy.style.right = '5%';
+            }
+
+            function playLivelyStory() {
+                resetStory();
+                
+                // Step 1: Rose appears with spin
+                setTimeout(() => {
+                    rose.style.opacity = '1';
+                    rose.style.transform = 'scale(1.2)';
+                    girlTeddy.classList.add('spin');
+                    setTimeout(() => {
+                        rose.style.transform = 'scale(1)';
+                        girlTeddy.classList.remove('spin');
+                    }, 800);
+                }, 500);
+
+                // Step 2: Girl gives rose - dance and move
+                setTimeout(() => {
+                    rose.style.opacity = '0';
+                    rose.style.transform = 'scale(0)';
+                    
+                    // Boy receives rose - show rose near him
+                    girlTeddy.classList.add('dance-girl');
+                    boyTeddy.classList.add('dance-boy');
+                    
+                    // Rose appears near boy briefly
+                    setTimeout(() => {
+                        rose.style.left = '70%';
+                        rose.style.opacity = '1';
+                        rose.style.transform = 'scale(1.2)';
+                        setTimeout(() => {
+                            rose.style.opacity = '0';
+                            rose.style.transform = 'scale(0)';
+                        }, 1000);
+                    }, 300);
+                    
+                    // Stop dancing after 2 seconds
+                    setTimeout(() => {
+                        girlTeddy.classList.remove('dance-girl');
+                        boyTeddy.classList.remove('dance-boy');
+                    }, 2000);
+                }, 2000);
+
+                // Step 3: Proposal - girl moves closer with excitement
+                setTimeout(() => {
+                    girlTeddy.style.transform = 'translateX(40px) translateY(-10px)';
+                    girlTeddy.classList.add('jump');
+                    boyTeddy.classList.add('jump');
+                    setTimeout(() => {
+                        girlTeddy.classList.remove('jump');
+                        boyTeddy.classList.remove('jump');
+                    }, 600);
+                }, 3500);
+
+                // Step 4: Chocolate appears with dance
+                setTimeout(() => {
+                    chocolate.style.opacity = '1';
+                    chocolate.style.transform = 'scale(1.3) rotate(360deg)';
+                    
+                    // Happy dance
+                    girlTeddy.classList.add('dance-girl');
+                    boyTeddy.classList.add('dance-boy');
+                    
+                    setTimeout(() => {
+                        chocolate.style.opacity = '0';
+                        chocolate.style.transform = 'scale(0)';
+                        girlTeddy.classList.remove('dance-girl');
+                        boyTeddy.classList.remove('dance-boy');
+                    }, 2000);
+                }, 5000);
+
+                // Step 5: Hug - both move close
+                setTimeout(() => {
+                    girlTeddy.style.transform = 'translateX(100px) translateY(-5px)';
+                    boyTeddy.style.transform = 'translateX(-100px) translateY(-5px)';
+                    
+                    // Bounce together
+                    girlTeddy.style.animation = 'none';
+                    boyTeddy.style.animation = 'none';
+                }, 7000);
+
+                // Step 6: Kiss and floating hearts
+                setTimeout(() => {
+                    // Show kiss hearts
+                    kissHearts.forEach(h => h.style.opacity = '1');
+                    
+                    // Teddies blush
+                    girlTeddy.textContent = '🧸💕🥰';
+                    boyTeddy.textContent = '🧸💙😊';
+                    
+                    // Little jump of joy
+                    girlTeddy.classList.add('jump');
+                    boyTeddy.classList.add('jump');
+                    
+                    setTimeout(() => {
+                        girlTeddy.classList.remove('jump');
+                        boyTeddy.classList.remove('jump');
+                    }, 600);
+                    
+                    // Hearts keep floating for a while
+                    setTimeout(() => {
+                        kissHearts.forEach(h => h.style.opacity = '0');
+                    }, 3000);
+                }, 8000);
+
+                // Final happy state
+                setTimeout(() => {
+                    girlTeddy.textContent = '🧸💕';
+                    boyTeddy.textContent = '🧸💙';
+                    girlTeddy.style.animation = 'idleBounce 2s infinite alternate';
+                    boyTeddy.style.animation = 'idleBounce 2s infinite alternate';
+                }, 11000);
+            }
+
+            // Typing animation
+            function typeWriterEffect(element, text, speed = 70, callback) {
+                let i = 0;
+                element.innerHTML = '';
+                function type() {
+                    if (i < text.length) {
+                        element.innerHTML += text.charAt(i);
+                        i++;
+                        setTimeout(type, speed);
+                    } else {
+                        if (callback) callback();
+                    }
+                }
+                type();
+            }
+
+            // YES button click handler
+            function onYesClick(e) {
+                e.preventDefault();
+                if (body.classList.contains('happy-mode')) return;
+                body.classList.add('happy-mode');
+
+                // Start lively teddy story
+                playLivelyStory();
+
+                // Fireworks
+                createHeartFirework();
+
+                const line1 = document.getElementById('typingLine1');
+                const line2 = document.getElementById('typingLine2');
+
+                line1.innerHTML = ''; 
+                line2.innerHTML = ''; 
+
+                // Type the messages
+                typeWriterEffect(line1, "Happy Valentines Day My Eze ❤️", 80, () => {
+                    typeWriterEffect(line2, "I Miss You Ashumaa ✨", 80);
+                });
+            }
+
+            yesBtn.addEventListener('click', onYesClick);
+            yesBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                onYesClick(e);
+            });
+
+            // Initialize story elements
+            resetStory();
+
+        })();
+    </script>
+
+    <style>
+        .btn-yes, .btn-no { transition: transform 0.2s, box-shadow 0.2s; }
+        .happy-mode .btn-no { display: none; }
+        #fireworksCanvas { pointer-events: none; }
+        .music-toggle { user-select: none; }
+        .message-line1 { font-size: inherit; font-weight: 700; white-space: pre-wrap; }
+        .message-line2 { font-size: clamp(1.8rem, 6vw, 2.4rem); color: #9b2c4d; margin-top: 12px; font-weight: 500; }
+        #teddyContainer { position: relative; width: 100%; height: 100%; }
+        .girl-teddy, .boy-teddy { transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .prop { transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); pointer-events: none; }
+        .kiss-container .kiss-heart { transition: opacity 0.3s; }
+        .teddy { text-shadow: 0 0 20px rgba(255,105,180,0.5); }
+        
+        /* Make No button lightning fast */
+        .btn-no {
+            transition: left 0.03s ease, top 0.03s ease !important;
+        }
+    </style>
+</body>
+</html>
